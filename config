@@ -1,0 +1,44 @@
+Host bastionET2598
+  User ubuntu
+  HostName 188.95.227.212
+  #change the above ip address with your own bastionET2598 ip address
+  IdentityFile ~/.ssh/id_rsa
+  #replace this path with your ssh private key path
+  UserKnownHostsFile=~/dev/null
+  StrictHostKeyChecking no
+  PasswordAuthentication no
+
+Host devhaproxy
+  User ubuntu
+  HostName 188.95.231.38
+  #change ip address with your haproxy ip address 
+  IdentityFile ~/.ssh/id_rsa
+  #replace this path with your ssh private key path
+  UserKnownHostsFile=~/dev/null
+  StrictHostKeyChecking no
+  PasswordAuthentication no
+
+Host devA
+  User ubuntu
+  HostName 10.0.1.5
+  #change ip address with your devA webserver ip address
+  ProxyJump bastionET2598
+  StrictHostKeyChecking no
+  PasswordAuthentication no
+
+Host devB
+  User ubuntu
+  HostName 10.0.1.19           
+  #change ip address with your devB webserver ip address
+  ProxyJump bastionET2598
+  StrictHostKeyChecking no
+  PasswordAuthentication no
+
+Host devC
+  User ubuntu
+  HostName 10.0.1.17
+  #change ip address with your devC webserver ip address
+  ProxyJump bastionET2598
+  StrictHostKeyChecking no
+  PasswordAuthentication no
+  
