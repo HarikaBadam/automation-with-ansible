@@ -1,0 +1,60 @@
+---
+- hosts: all
+  gather_facts: yes
+
+- hosts:webservers
+  become: yes
+  tasks:
+    - name: update cache
+      apt:
+        update_cache: yes
+    - name: intsall nginx
+      apt:
+        name: nginx
+        state: present
+    - name: install php7.4
+      apt:
+        name: php7.4
+        state: present
+    - name: install php7.4-fpm package
+      apt:
+        pkg:
+          - php7.4-fpm
+    - name: checking if index.html file exists
+      stat: path=/var/www/html/index.html
+      register: foo
+    - name: move index.html to index.html_bkp
+      command: mv /var/www/html/index.html /var/www/html/index.html_bkp
+      when: foo.stat.exists
+    - name: configuring default nginx config file
+      template:
+        src: ./default
+        dest: /etc/nginx/sites-available/default
+    - name: adding index.php file
+      copy:
+        src: ./index.php
+        dest: /var/www/html/index.php
+    - name: reload nginx
+      service:
+        name: nginx
+        state: restarted
+
+- hosts: haproxy
+  become: yes
+  tasks:
+    - name: update cache
+      apt:
+        update_cache: yes
+    - name: install haproxy
+      apt:
+        name: haproxy
+        state: latest
+    - name: configuring haproxy config file
+      template:
+        src: ./haproxy.cfg.j2
+        dest: /etc/haproxy/haproxy.cfg
+    - name: reload haproxy
+      service:
+        name: haproxy
+        state: restarted 
+  
