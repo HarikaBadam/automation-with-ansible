@@ -1,8 +1,5 @@
 ---
-- hosts: all
-  gather_facts: yes
-
-- hosts:webservers
+- hosts: webservers
   become: yes
   tasks:
     - name: update cache
@@ -38,7 +35,10 @@
       service:
         name: nginx
         state: restarted
-
+        
+- hosts: all
+  gather_facts: yes
+  
 - hosts: haproxy
   become: yes
   tasks:
