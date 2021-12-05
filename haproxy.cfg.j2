@@ -38,8 +38,9 @@ frontend web-frontend
 	default_backend web-backend
 
 backend web-backend
+        balance roundrobin
 {% for host in groups['webservers'] %}
-    server  {{ host }} {{ hostvars[host]['ansible_env'].SSH_CONNECTION.split(' ')[2] }}:80
+    server  {{ host }} {{ hostvars[host]["ansible_default_ipv4"]["address"] }}:80
 {% endfor %}
    
 #  sever web-server1 10.0.1.5:80 check
